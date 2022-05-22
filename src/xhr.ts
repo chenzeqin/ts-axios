@@ -1,11 +1,10 @@
 import { AxiosRequestConfig } from './types'
-import { buildRUL } from './helpers/url'
 
 export default function xhr(config: AxiosRequestConfig) {
-  const { url, method = 'get', data = null, params = null } = config
+  const { url, method = 'get', data = null } = config
 
   const request = new XMLHttpRequest()
-  request.open(method.toLowerCase(), buildRUL(url, params), true)
+  request.open(method.toLowerCase(), url, true)
 
   request.onreadystatechange = event => {
     if (request.readyState === 4) {
