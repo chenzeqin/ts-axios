@@ -15,10 +15,26 @@ app.use(bodyParser.json())
 
 const compiler = webpack(config)
 
-
 // 定义一些 api 路由
 router.get('/simple/get', (req, res) => {
   res.json(req.query)
+})
+// 测试data转换,需要设置 content-type:application/json
+router.post('/simple/post', (req, res) => {
+  res.json(req.body)
+})
+// post data为buffer
+router.post('/simple/buffer', (req, res) => {
+  let msg = []
+  req.on('data', chunk => {
+    if (chunk) {
+      msg.push(chunk)
+    }
+  })
+  req.on('end', () => {
+    const buf = Buffer.concat(msg)
+    res.json(buf.toJSON())
+  })
 })
 //  more router ...
 

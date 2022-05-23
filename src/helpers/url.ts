@@ -1,4 +1,4 @@
-import { isDate, isObject, encode } from './util'
+import { isDate, isPlainObject, encode } from './util'
 
 export function buildRUL(url: string, params?: any): string {
   if (!params) {
@@ -24,12 +24,13 @@ export function buildRUL(url: string, params?: any): string {
       if (isDate(val)) {
         val = (val as Date).toISOString()
       }
-      if (isObject(val)) {
+      if (isPlainObject(val)) {
         val = JSON.stringify(val as Object)
       }
       parts.push(`${encode(key)}=${encode(val)}`)
     })
   })
+
   let serializedParams = parts.join('&')
   if (serializedParams) {
     // 去掉锚点# （对于后端没有用）

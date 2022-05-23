@@ -3,7 +3,7 @@ const toString = Object.prototype.toString
 export function isDate(val: any) {
   return toString.call(val) === '[object Date]'
 }
-export function isObject(val: any) {
+export function isPlainObject(val: any) {
   return toString.call(val) === '[object Object]'
 }
 // 编码，特殊符号不编码
