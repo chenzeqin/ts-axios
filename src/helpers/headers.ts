@@ -23,3 +23,21 @@ export function processHeaders(headers: any = {}, data: any) {
 
   return headers
 }
+
+// 转换 responseHeaders
+export function parseHeaders(headers: string) {
+  const headerOjb = Object.create(null)
+  if (!headerOjb) {
+    return headerOjb
+  }
+
+  // 通过换行符分割
+  headers.split('\r\n').forEach(row => {
+    const [key, value] = row.split(':')
+    if (key) {
+      headerOjb[key.trim().toLowerCase()] = (value || '').trim()
+    }
+  })
+
+  return headerOjb
+}

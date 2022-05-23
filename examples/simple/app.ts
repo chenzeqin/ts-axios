@@ -3,12 +3,15 @@ import axios from '../../src/index'
 axios({
   url: '/simple/get?test=1##?sfsf#dd',
   method: 'get',
+  responseType:'json',
   params: {
     arr: ['a', 'b', 3],
     date: new Date(),
     object: { name: 'curry' },
     spacialCode: '&($%#%^#@)!!!   !!!!@#%%^&*()_+ '
   }
+}).then(res => {
+  console.log(res)
 })
 // demo: data为普通对象,不传headers
 axios({
