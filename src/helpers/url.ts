@@ -19,6 +19,7 @@ export function buildRUL(url: string, params?: any): string {
     } else {
       values = [value]
     }
+
     // 拼接参数
     values.forEach(val => {
       if (isDate(val)) {
