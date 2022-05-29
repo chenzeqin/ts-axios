@@ -1,9 +1,11 @@
+import { createError } from './helpers/error'
 import { parseHeaders } from './helpers/headers'
 import { AxiosPromise, AxiosRequestConfig, AxiosResponse } from './types'
 
 export default function xhr(config: AxiosRequestConfig): AxiosPromise {
   return new Promise((resolve, reject) => {
     const { url, method = 'get', data = null, headers, responseType, timeout } = config
+
     const request = new XMLHttpRequest()
 
     if (timeout) {
@@ -48,21 +50,28 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
     }
 
     request.onerror = () => {
-      reject(new Error('Networe Error'))
+      reject(createError('Networe Error', config, null, request))
     }
 
     request.ontimeout = () => {
-      reject(new Error(`Timeout of ${timeout}ms exceeded`))
+      reject(createError(`Timeout of ${timeout}ms exceeded`, config, null, request))
     }
 
     request.send(data)
 
     function handleResponse(response: AxiosResponse) {
-      console.log(response.status)
       if (response.status >= 200 || response.status <= 300) {
         resolve(response)
       } else {
-        reject(`request failed with status ${response.status}`)
+        reject(
+          createError(
+            `request failed with status ${response.status}`,
+            config,
+            null,
+            request,
+            response
+          )
+        )
       }
     }
   })
