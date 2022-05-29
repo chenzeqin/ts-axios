@@ -41,3 +41,13 @@ axios('/extend/post', {
 }).then(res => {
   console.log(res)
 })
+
+interface User {
+  name: string
+}
+axios<User>('/extend/post', {
+  method: 'post',
+  data: { name: '接收泛型' }
+}).then(res => {
+  console.log(res.data.name)
+})
