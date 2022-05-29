@@ -1,7 +1,7 @@
 const express = require('express')
 
 const router = express.Router()
-/* simple */
+/* simple 基本功能 */
 router.get('/simple/get', (req, res) => {
   res.json(req.query)
 })
@@ -22,7 +22,8 @@ router.post('/simple/buffer', (req, res) => {
     res.json(buf.toJSON())
   })
 })
-/* error */
+
+/* error 异常处理 */
 router.get('/error/random', (req, res) => {
   if (Math.random() > 0.5) {
     res.json({ msg: 'request is ok' })
@@ -36,6 +37,14 @@ router.get('/error/timeout', (req, res) => {
   setTimeout(() => {
     res.json({ msg: 'wait for 5s' })
   }, 5000)
+})
+
+/* extend 接口扩展 */
+router.get('/extend/get', (req, res) => {
+  res.json({ msg: 'ok' })
+})
+router.post('/extend/post', (req, res) => {
+  res.json(req.body)
 })
 
 module.exports = router
