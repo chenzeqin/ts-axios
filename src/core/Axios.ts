@@ -2,7 +2,7 @@
  * @Author: chenzq
  * @Date: 2022-05-29 14:36:08
  * @LastEditors: chenzq
- * @LastEditTime: 2022-05-29 23:05:25
+ * @LastEditTime: 2022-05-30 00:15:11
  * @Description: Axios类，声明一些方法
  */
 
@@ -10,7 +10,17 @@ import { AxiosRequestConfig, Method } from '../types/index'
 import dispatchRequest from './dispacthRequest'
 
 export default class Axios {
-  request(config: AxiosRequestConfig) {
+  request(url: string | AxiosRequestConfig, config?: AxiosRequestConfig) {
+    // 重载
+    if (typeof url === 'string') {
+      if (!config) {
+        config = {}
+      }
+      config.url = url
+    } else {
+      config = url
+    }
+
     return dispatchRequest(config)
   }
 

@@ -10,7 +10,7 @@ function createInstance() {
   // 把实例axios所有方法挂载到instance
   extend(instance, context)
 
-  return instance as AxiosInstance & IAxios
+  return instance as AxiosInstance
 }
 
 const axios = createInstance()

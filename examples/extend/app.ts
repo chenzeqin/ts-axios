@@ -27,3 +27,17 @@ axios.post('/extend/post', { name: '接口扩展' }, {
 }).then(res => {
   console.log(res)
 })
+// 接口重载
+axios({
+  url: '/extend/post',
+  method: 'post',
+  data: { name: '接口重载' }
+}).then(res => {
+  console.log(res)
+})
+axios('/extend/post', {
+  method: 'post',
+  data: { name: '接口重载' }
+}).then(res => {
+  console.log(res)
+})
