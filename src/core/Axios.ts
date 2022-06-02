@@ -2,15 +2,41 @@
  * @Author: chenzq
  * @Date: 2022-05-29 14:36:08
  * @LastEditors: chenzq
- * @LastEditTime: 2022-05-30 00:15:11
+ * @LastEditTime: 2022-06-03 00:03:52
  * @Description: Axios类，声明一些方法
  */
 
-import { AxiosRequestConfig, Method } from '../types/index'
+import {
+  AxiosPromise,
+  AxiosRequestConfig,
+  AxiosResponse,
+  Method,
+  RejectedFn,
+  ResolvedFn
+} from '../types/index'
 import dispatchRequest from './dispacthRequest'
+import { InterceptorManager } from './interceptorManager'
+
+interface Interceptors {
+  request: InterceptorManager<AxiosRequestConfig>
+  response: InterceptorManager<AxiosResponse>
+}
+
+interface PromiseChain<T> {
+  resolved: ResolvedFn<T> | ((config: AxiosRequestConfig) => AxiosPromise<T>)
+  rejected?: RejectedFn
+}
 
 export default class Axios {
-  request(url: string | AxiosRequestConfig, config?: AxiosRequestConfig) {
+  interceptors: Interceptors
+  constructor() {
+    this.interceptors = {
+      request: new InterceptorManager<AxiosRequestConfig>(),
+      response: new InterceptorManager<AxiosResponse>()
+    }
+  }
+
+  request(url: string | AxiosRequestConfig, config?: AxiosRequestConfig): AxiosPromise {
     // 重载
     if (typeof url === 'string') {
       if (!config) {
@@ -20,8 +46,34 @@ export default class Axios {
     } else {
       config = url
     }
+    console.log(config)
 
-    return dispatchRequest(config)
+    const chain: PromiseChain<any>[] = [
+      {
+        resolved: dispatchRequest
+      }
+    ]
+
+    // 请求拦截器，先添加，后调用
+    this.interceptors.request.forEach(interceptor => {
+      console.log(interceptor)
+      chain.unshift(interceptor)
+    })
+    // 响应拦截器，先添加，先调用
+    this.interceptors.response.forEach(interceptor => {
+      chain.push(interceptor)
+    })
+
+    let promise = Promise.resolve(config)
+    console.log(promise)
+    while (chain.length) {
+      console.log(chain.length)
+      const { resolved, rejected } = chain.shift()!
+      console.log(resolved)
+      promise = promise.then(resolved, rejected)
+    }
+
+    return promise as AxiosPromise
   }
 
   // _requestWithNoData

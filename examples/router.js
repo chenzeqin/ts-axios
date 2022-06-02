@@ -47,4 +47,9 @@ router.post('/extend/post', (req, res) => {
   res.json(req.body)
 })
 
+/* interceptor 拦截器 */
+router.get('/interceptor/get', (req, res) => {
+  res.end('hello')
+})
+
 module.exports = router
