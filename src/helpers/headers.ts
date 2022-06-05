@@ -1,4 +1,4 @@
-import { isPlainObject } from './util'
+import { deepMerge, isPlainObject } from './util'
 
 // 处理headername 大小写问题
 function normalizeHeaderName(headers: any, normalizeName: string) {
@@ -40,4 +40,19 @@ export function parseHeaders(headers: string) {
   })
 
   return headerOjb
+}
+
+export function flattenHeaders(headers: any, method: string): any {
+  if (!headers) {
+    return headers
+  }
+
+  headers = deepMerge(headers.common, headers[method], headers)
+
+  const methods = ['common', 'get', 'delete', 'options', 'head', 'post', 'put', 'patch']
+  methods.forEach(method => {
+    delete headers[method]
+  })
+
+  return headers
 }

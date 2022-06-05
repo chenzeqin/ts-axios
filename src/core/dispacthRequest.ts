@@ -2,7 +2,8 @@ import { AxiosRequestConfig, AxiosResponse } from '../types/index'
 import xhr from './xhr'
 import { buildRUL } from '../helpers/url'
 import { transformRequest, transformResponse } from '../helpers/data'
-import { processHeaders } from '../helpers/headers'
+import { flattenHeaders, processHeaders } from '../helpers/headers'
+import transform from './transform'
 
 export default function dispatchRequest(config: AxiosRequestConfig) {
   return xhr(processConfig(config)).then(response => {
@@ -13,9 +14,10 @@ export default function dispatchRequest(config: AxiosRequestConfig) {
 // 处理请求参数
 function processConfig(config: AxiosRequestConfig): AxiosRequestConfig {
   config.url = transformUrl(config)
-  // 在处理data之前处理headers
-  config.headers = transformHeader(config)
-  config.data = transformRequestData(config)
+  // processHeaders transformRequest 移到默认配置的transformRequest中了
+  config.data = transform(config.data, config.headers, config.transformRequest)
+  // transformHeader 为了当 datas是object时，添加content-type:application/json之后在flattenHeaders
+  config.headers = flattenHeaders(config.headers, config.method!)
 
   return config
 }
@@ -24,18 +26,8 @@ function transformUrl(config: AxiosRequestConfig) {
   const { url, params } = config
   return buildRUL(url || '', params)
 }
-// 转换request data
-function transformRequestData(config: AxiosRequestConfig) {
-  return transformRequest(config.data)
-}
-// 转换headers
-function transformHeader(config: AxiosRequestConfig) {
-  const { headers, data } = config
-  return processHeaders(headers, data)
-}
+
 // 转换response data
 function transformResponseData(response: AxiosResponse) {
-  response.data = transformResponse(response.data)
-
-  return response
+  return transform(response.data, response.headers, response.config.transformResponse)
 }

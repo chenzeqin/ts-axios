@@ -13,6 +13,9 @@ const router  = require('./router.js')
 const app = express()
 // parse application/json
 app.use(bodyParser.json())
+// app.use(bodyParser.text())
+app.use(bodyParser.urlencoded({ extended: true }))
+
 app.use(router)
 
 const compiler = webpack(config)

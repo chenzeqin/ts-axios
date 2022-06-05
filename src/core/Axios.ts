@@ -2,7 +2,7 @@
  * @Author: chenzq
  * @Date: 2022-05-29 14:36:08
  * @LastEditors: chenzq
- * @LastEditTime: 2022-06-03 00:03:52
+ * @LastEditTime: 2022-06-05 12:23:09
  * @Description: Axios类，声明一些方法
  */
 
@@ -16,6 +16,7 @@ import {
 } from '../types/index'
 import dispatchRequest from './dispacthRequest'
 import { InterceptorManager } from './interceptorManager'
+import mergeConfig from './mergeConfig'
 
 interface Interceptors {
   request: InterceptorManager<AxiosRequestConfig>
@@ -28,8 +29,10 @@ interface PromiseChain<T> {
 }
 
 export default class Axios {
+  default: AxiosRequestConfig
   interceptors: Interceptors
-  constructor() {
+  constructor(initConfig: AxiosRequestConfig) {
+    this.default = initConfig
     this.interceptors = {
       request: new InterceptorManager<AxiosRequestConfig>(),
       response: new InterceptorManager<AxiosResponse>()
@@ -46,7 +49,9 @@ export default class Axios {
     } else {
       config = url
     }
-    console.log(config)
+
+    // 合并配置
+    config = mergeConfig(this.default, config)
 
     const chain: PromiseChain<any>[] = [
       {
@@ -65,11 +70,9 @@ export default class Axios {
     })
 
     let promise = Promise.resolve(config)
-    console.log(promise)
+
     while (chain.length) {
-      console.log(chain.length)
       const { resolved, rejected } = chain.shift()!
-      console.log(resolved)
       promise = promise.then(resolved, rejected)
     }
 

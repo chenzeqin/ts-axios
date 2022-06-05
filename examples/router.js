@@ -51,5 +51,9 @@ router.post('/extend/post', (req, res) => {
 router.get('/interceptor/get', (req, res) => {
   res.end('hello')
 })
+/* config 合并配置 */
+router.post('/config/post', function(req, res) {
+  res.json(req.body)
+})
 
 module.exports = router

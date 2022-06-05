@@ -26,3 +26,26 @@ export function encode(val: string) {
     .replace(/%5B/gi, '[')
     .replace(/%5D/gi, ']')
 }
+/* obj1,obj2, obj3... */
+export function deepMerge(...objs: any[]): any {
+  const result = Object.create(null)
+
+  objs.forEach(obj => {
+    Object.keys(obj).forEach(key => {
+      const val = obj[key]
+
+      if (isPlainObject(val)) {
+        // 如果已经存在值，再拿出来合并一次
+        if (isPlainObject(result[key])) {
+          result[key] = deepMerge(result[key], val)
+        } else {
+          result[key] = deepMerge(val)
+        }
+      } else {
+        result[key] = val
+      }
+    })
+  })
+
+  return result
+}
