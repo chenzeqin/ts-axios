@@ -1,11 +1,13 @@
-import { AxiosRequestConfig, AxiosResponse } from '../types/index'
+import { AxiosPromise, AxiosRequestConfig, AxiosResponse } from '../types/index'
 import xhr from './xhr'
 import { buildRUL } from '../helpers/url'
 import { transformRequest, transformResponse } from '../helpers/data'
 import { flattenHeaders, processHeaders } from '../helpers/headers'
 import transform from './transform'
 
-export default function dispatchRequest(config: AxiosRequestConfig) {
+export default function dispatchRequest(config: AxiosRequestConfig): AxiosPromise {
+  throwIfCanceledBeforeRequest(config)
+
   return xhr(processConfig(config)).then(response => {
     return transformResponseData(response)
   })
@@ -28,6 +30,14 @@ function transformUrl(config: AxiosRequestConfig) {
 }
 
 // 转换response data
-function transformResponseData(response: AxiosResponse) {
-  return transform(response.data, response.headers, response.config.transformResponse)
+function transformResponseData(response: AxiosResponse): AxiosResponse {
+  response.data = transform(response.data, response.headers, response.config.transformResponse)
+
+  return response
+}
+
+function throwIfCanceledBeforeRequest(config: AxiosRequestConfig) {
+  if (config.cancelToken) {
+    config.cancelToken.throwIfCanceled()
+  }
 }

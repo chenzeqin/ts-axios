@@ -4,7 +4,15 @@ import { AxiosPromise, AxiosRequestConfig, AxiosResponse } from '../types'
 
 export default function xhr(config: AxiosRequestConfig): AxiosPromise {
   return new Promise((resolve, reject) => {
-    const { url = '', method = 'get', data = null, headers, responseType, timeout } = config
+    const {
+      url = '',
+      method = 'get',
+      data = null,
+      headers,
+      responseType,
+      timeout,
+      cancelToken
+    } = config
     const request = new XMLHttpRequest()
 
     if (timeout) {
@@ -54,6 +62,13 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
 
     request.ontimeout = () => {
       reject(createError(`Timeout of ${timeout}ms exceeded`, config, null, request))
+    }
+
+    if (cancelToken) {
+      cancelToken.promise.then(message => {
+        request.abort()
+        reject(message)
+      })
     }
 
     request.send(data)
