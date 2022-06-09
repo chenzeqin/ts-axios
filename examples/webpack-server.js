@@ -7,15 +7,17 @@ const webpackDevMiddleware = require('webpack-dev-middleware')
 const webpackHotMiddleware = require('webpack-hot-middleware')
 var bodyParser = require('body-parser')
 const config = require('./webpack.config.js')
-const router  = require('./router.js')
+const router = require('./router.js')
+const cookieParser = require('cookie-parser')
 
+require('./server2')
 
 const app = express()
 // parse application/json
 app.use(bodyParser.json())
 // app.use(bodyParser.text())
 app.use(bodyParser.urlencoded({ extended: true }))
-
+app.use(cookieParser())
 app.use(router)
 
 const compiler = webpack(config)
@@ -36,7 +38,13 @@ app.use(
 // 需要在webpack.config.js配置plugins
 app.use(webpackHotMiddleware(compiler))
 // 处理静态资源
-app.use(express.static(__dirname))
+app.use(
+  express.static(__dirname, {
+    setHeaders(res) {
+      res.cookie('XSRF-TOKEN-D', '1234abc')
+    }
+  })
+)
 
 // Serve the files on port 3000.
 app.listen(3000, function() {

@@ -1,5 +1,8 @@
 import { isDate, isPlainObject, encode } from './util'
-
+interface URLOrigin {
+  protocol: string
+  host: string
+}
 export function buildRUL(url: string, params?: any): string {
   if (!params) {
     return url
@@ -43,4 +46,23 @@ export function buildRUL(url: string, params?: any): string {
     url += url.indexOf('?') !== -1 ? `&${serializedParams}` : `?${serializedParams}`
   }
   return url
+}
+
+// url是否和当前域同源
+export function isURLSameOrigin(url: string): boolean {
+  const targetOrgin = resolveUrl(url)
+
+  return targetOrgin.protocol === currentOrigin.protocol && targetOrgin.host === currentOrigin.host
+}
+
+const a = document.createElement('a')
+const currentOrigin = resolveUrl(window.location.href)
+function resolveUrl(url: string): URLOrigin {
+  a.setAttribute('url', url)
+  const { protocol, host } = a
+
+  return {
+    protocol,
+    host
+  }
 }

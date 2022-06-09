@@ -69,4 +69,9 @@ router.post('/cancel/post', function(req, res) {
   }, 1000)
 })
 
+/* more 更多功能 */
+router.get('/more/get', function(req, res) {
+  res.json(req.cookies)
+})
+
 module.exports = router

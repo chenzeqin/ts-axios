@@ -1,5 +1,7 @@
+import cookie from '../helpers/cookie'
 import { createError } from '../helpers/error'
 import { parseHeaders } from '../helpers/headers'
+import { isURLSameOrigin } from '../helpers/url'
 import { AxiosPromise, AxiosRequestConfig, AxiosResponse } from '../types'
 
 export default function xhr(config: AxiosRequestConfig): AxiosPromise {
@@ -11,7 +13,10 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       headers,
       responseType,
       timeout,
-      cancelToken
+      cancelToken,
+      withCredentials,
+      xsrfCookieName,
+      xsrfHeaderName
     } = config
     const request = new XMLHttpRequest()
 
@@ -19,11 +24,22 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       request.timeout = timeout
     }
 
+    if (withCredentials) {
+      request.withCredentials = withCredentials
+    }
+
     if (responseType) {
       request.responseType = responseType
     }
 
     request.open(method.toLowerCase(), url, true)
+
+    // 防止xsrf攻击
+    if ((withCredentials || isURLSameOrigin(url)) && xsrfCookieName) {
+      const xsfrValue = cookie.read(xsrfCookieName)
+      console.log(xsfrValue)
+      if (xsfrValue && xsrfHeaderName) headers[xsrfHeaderName] = xsfrValue
+    }
 
     // 设置请求头
     Object.keys(headers).forEach(name => {
@@ -57,7 +73,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
     }
 
     request.onerror = () => {
-      reject(createError('Networe Error', config, null, request))
+      reject(createError('Network Error', config, null, request))
     }
 
     request.ontimeout = () => {
