@@ -61,6 +61,22 @@ export function buildRUL(
   return url
 }
 
+export function isAbsoluteURL(url: string): boolean {
+  return /([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url)
+}
+
+export function combineURL(baseURL: string, relativeUrl?: string): string {
+  if (!relativeUrl) {
+    return baseURL
+  }
+
+  if (isAbsoluteURL(baseURL)) {
+    return `${baseURL.replace(/\/+/, '')}/${relativeUrl.replace(/^\/+/i, '')}`
+  }
+
+  return baseURL
+}
+
 // url是否和当前域同源
 export function isURLSameOrigin(url: string): boolean {
   const targetOrgin = resolveUrl(url)

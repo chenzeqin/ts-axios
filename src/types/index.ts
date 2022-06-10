@@ -33,7 +33,7 @@ export interface AxiosRequestConfig {
   auth?: AxiosBasicCredential
   validateStatus?: (status: number) => boolean
   paramsSerializer?: (params: any) => string
-
+  baseURL?: string
   [key: string]: any
 }
 

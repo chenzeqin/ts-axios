@@ -105,3 +105,23 @@ axios.get('/more/params', {
 }).catch(err => {
   console.error(err)
 })
+
+//  baseURL
+const instace = axios.create({
+  baseURL: 'https://dog.ceo/api/breeds/image'
+})
+
+// 会自动拼上根路径
+instace.get('random', {
+}).then(res => {
+  console.log(res)
+}).catch(err => {
+  console.error(err)
+})
+// 不会自动拼上根路径
+instace.get('https://dog.ceo/api/breeds/image/random', {
+}).then(res => {
+  console.log(res)
+}).catch(err => {
+  console.error(err)
+})
