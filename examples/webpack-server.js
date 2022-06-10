@@ -6,9 +6,11 @@ const webpack = require('webpack')
 const webpackDevMiddleware = require('webpack-dev-middleware')
 const webpackHotMiddleware = require('webpack-hot-middleware')
 var bodyParser = require('body-parser')
+const multipart = require('connect-multiparty')
 const config = require('./webpack.config.js')
 const router = require('./router.js')
 const cookieParser = require('cookie-parser')
+const path = require('path')
 
 require('./server2')
 
@@ -18,6 +20,13 @@ app.use(bodyParser.json())
 // app.use(bodyParser.text())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieParser())
+
+app.use(
+  multipart({
+    uploadDir: path.resolve(__dirname, 'upload-files')
+  })
+)
+
 app.use(router)
 
 const compiler = webpack(config)

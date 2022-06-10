@@ -73,5 +73,10 @@ router.post('/cancel/post', function(req, res) {
 router.get('/more/get', function(req, res) {
   res.json(req.cookies)
 })
+// grogress 上传进度
+router.post('/more/upload', function(req, res) {
+  console.log(req.body, req.files);
+  res.json('upload ok')
+})
 
 module.exports = router

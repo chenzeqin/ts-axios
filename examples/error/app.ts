@@ -1,5 +1,4 @@
-import axios from '../../src/index'
-import type { AxiosError } from '../../src/index'
+import axios, { AxiosError } from '../../src/index'
 
 axios({
   url: '/error/random',

@@ -49,3 +49,7 @@ export function deepMerge(...objs: any[]): any {
 
   return result
 }
+
+export function isFormData(val: any): val is FormData {
+  return val && val instanceof FormData
+}
