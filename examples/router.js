@@ -1,6 +1,6 @@
 const express = require('express')
-
 const router = express.Router()
+const atob = require('atob')
 /* simple 基本功能 */
 router.get('/simple/get', (req, res) => {
   res.json(req.query)
@@ -75,8 +75,26 @@ router.get('/more/get', function(req, res) {
 })
 // grogress 上传进度
 router.post('/more/upload', function(req, res) {
-  console.log(req.body, req.files);
+  console.log(req.body, req.files)
   res.json('upload ok')
+})
+// auth
+router.post('/more/auth', function(req, res) {
+  const auth = req.headers.authorization
+  console.log(auth)
+  if (auth) {
+    const [type, credentials] = auth.split(' ')
+    if (credentials) {
+      const [username, password] = atob(credentials).split(':')
+      if (type === 'Basic' && username === 'admin' && password === '123') {
+        res.json(req.body)
+      } else {
+        res.end('UnAuthorization')
+      }
+    }
+  }
+
+  res.json(req.data)
 })
 
 module.exports = router

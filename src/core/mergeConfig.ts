@@ -36,7 +36,7 @@ function deepMergeValue(val1: any, val2: any) {
   return val2
 }
 
-const deepMergeValueKeys = ['headers']
+const deepMergeValueKeys = ['headers', 'auth']
 deepMergeValueKeys.forEach(key => {
   mergeMap[key] = deepMergeValue
 })

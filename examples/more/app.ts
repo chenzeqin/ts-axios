@@ -42,3 +42,19 @@ axios({
 }).then(res => {
   console.log(res)
 })
+
+
+/* auth */
+axios({
+  method: 'post',
+  url: '/more/auth',
+  auth: {
+    username: "admin",
+    password: '123'
+  },
+  data: {
+    isLogin: true
+  }
+}).then(res => {
+  console.log(res)
+})
