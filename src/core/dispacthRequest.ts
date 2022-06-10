@@ -25,8 +25,8 @@ function processConfig(config: AxiosRequestConfig): AxiosRequestConfig {
 }
 // 转换url
 function transformUrl(config: AxiosRequestConfig) {
-  const { url, params } = config
-  return buildRUL(url || '', params)
+  const { url, params, paramsSerializer } = config
+  return buildRUL(url || '', params, paramsSerializer)
 }
 
 // 转换response data

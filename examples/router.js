@@ -102,5 +102,9 @@ router.get('/more/304', function(req, res) {
   res.status(304)
   res.end('ok')
 })
+// params 序列化
+router.get('/more/params', function(req, res) {
+  res.json(req.query)
+})
 
 module.exports = router
