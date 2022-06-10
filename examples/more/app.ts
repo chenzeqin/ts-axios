@@ -58,3 +58,20 @@ axios({
 }).then(res => {
   console.log(res)
 })
+
+// validate status
+axios.get('/more/304').then(res => {
+  console.log(res)
+}).catch(err => {
+  console.error(err)
+})
+
+axios.get('/more/304', {
+  validateStatus(status) {
+    return 200 <= status && status < 400
+  }
+}).then(res => {
+  console.log(res)
+}).catch(err => {
+  console.error(err)
+})

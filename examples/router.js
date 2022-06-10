@@ -97,4 +97,10 @@ router.post('/more/auth', function(req, res) {
   res.json(req.data)
 })
 
+// valistate status
+router.get('/more/304', function(req, res) {
+  res.status(304)
+  res.end('ok')
+})
+
 module.exports = router
