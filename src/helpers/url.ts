@@ -3,7 +3,7 @@ interface URLOrigin {
   protocol: string
   host: string
 }
-export function buildRUL(
+export function buildURL(
   url: string,
   params?: any,
   paramsSerializer?: (params: any) => string
@@ -71,7 +71,7 @@ export function combineURL(baseURL: string, relativeUrl?: string): string {
   }
 
   if (isAbsoluteURL(baseURL)) {
-    return `${baseURL.replace(/\/+/, '')}/${relativeUrl.replace(/^\/+/i, '')}`
+    return `${baseURL.replace(/\/+$/, '')}/${relativeUrl.replace(/^\/+/i, '')}`
   }
 
   return baseURL

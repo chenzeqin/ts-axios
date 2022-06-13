@@ -2,7 +2,7 @@
  * @Author: chenzq
  * @Date: 2022-05-29 14:36:08
  * @LastEditors: chenzq
- * @LastEditTime: 2022-06-05 12:23:09
+ * @LastEditTime: 2022-06-13 20:14:07
  * @Description: Axios类，声明一些方法
  */
 
@@ -14,7 +14,7 @@ import {
   RejectedFn,
   ResolvedFn
 } from '../types/index'
-import dispatchRequest from './dispacthRequest'
+import dispatchRequest, { transformUrl } from './dispacthRequest'
 import { InterceptorManager } from './interceptorManager'
 import mergeConfig from './mergeConfig'
 
@@ -121,5 +121,11 @@ export default class Axios {
         data
       })
     )
+  }
+
+  getUri(config: AxiosRequestConfig) {
+    config = mergeConfig(this.default, config)
+
+    return transformUrl(config)
   }
 }

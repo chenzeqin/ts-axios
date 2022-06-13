@@ -112,16 +112,35 @@ const instace = axios.create({
 })
 
 // 会自动拼上根路径
-instace.get('random', {
-}).then(res => {
+instace.get('random').then(res => {
   console.log(res)
 }).catch(err => {
   console.error(err)
 })
 // 不会自动拼上根路径
-instace.get('https://dog.ceo/api/breeds/image/random', {
-}).then(res => {
+instace.get('https://dog.ceo/api/breeds/image/random').then(res => {
   console.log(res)
 }).catch(err => {
   console.error(err)
 })
+
+/* 静态方法扩展 demo */
+const a = instace.get('random')
+const b = instace.get('https://dog.ceo/api/breeds/image/random')
+axios.all([a, b])
+  .then(axios.spread(function (resA, resB) {
+    console.log(resA.data)
+    console.log(resB.data)
+  }))
+
+
+const fakeConfig = {
+  baseURL: 'https://www.baidu.com/',
+  url: '/user/12345',
+  params: {
+    idClient: 1,
+    idTest: 2,
+    testString: 'thisIsATest'
+  }
+}
+console.log(axios.getUri(fakeConfig))

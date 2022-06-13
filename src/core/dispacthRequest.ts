@@ -1,8 +1,7 @@
 import { AxiosPromise, AxiosRequestConfig, AxiosResponse } from '../types/index'
 import xhr from './xhr'
-import { buildRUL, combineURL, isAbsoluteURL } from '../helpers/url'
-import { transformRequest, transformResponse } from '../helpers/data'
-import { flattenHeaders, processHeaders } from '../helpers/headers'
+import { buildURL, combineURL, isAbsoluteURL } from '../helpers/url'
+import { flattenHeaders } from '../helpers/headers'
 import transform from './transform'
 
 export default function dispatchRequest(config: AxiosRequestConfig): AxiosPromise {
@@ -24,13 +23,13 @@ function processConfig(config: AxiosRequestConfig): AxiosRequestConfig {
   return config
 }
 // 转换url
-function transformUrl(config: AxiosRequestConfig) {
+export function transformUrl(config: AxiosRequestConfig) {
   let { url, params, paramsSerializer, baseURL } = config
 
   if (baseURL && !isAbsoluteURL(url!)) {
     url = combineURL(baseURL, url)
   }
-  return buildRUL(url || '', params, paramsSerializer)
+  return buildURL(url || '', params, paramsSerializer)
 }
 
 // 转换response data
